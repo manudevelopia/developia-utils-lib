@@ -4,7 +4,7 @@ public class Queue<T> {
     private QueueNode<T> first = null;
     private QueueNode<T> last = null;
 
-    void push(T value) {
+    public void push(T value) {
         if (first == null) {
             first = new QueueNode<>(value);
         } else if (first.next() == null) {
@@ -17,7 +17,7 @@ public class Queue<T> {
         }
     }
 
-    T pop() {
+    public T pop() {
         if (first == null) return null;
         var value = first.value();
         first = first.next();
