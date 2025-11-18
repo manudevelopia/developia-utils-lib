@@ -1,4 +1,4 @@
-package info.developia.lib.pile;
+package info.developia.lib.queue;
 
 public class Queue<T> {
     private QueueNode<T> first = null;

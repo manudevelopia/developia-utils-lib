@@ -1,5 +1,6 @@
 package info.developia.lib.pile
 
+import info.developia.lib.queue.pile.Queue
 import spock.lang.Specification
 
 class QueueTest extends Specification {

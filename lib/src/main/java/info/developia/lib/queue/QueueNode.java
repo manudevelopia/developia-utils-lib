@@ -1,4 +1,4 @@
-package info.developia.lib.pile;
+package info.developia.lib.queue;
 
 public class QueueNode<T> {
     private final T value;
