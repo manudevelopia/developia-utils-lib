@@ -80,7 +80,7 @@ public class Try {
     public static <T> TryResult<T> of(Supplier<T> supplier) {
         try {
             return new Success<>(supplier.get());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             return new Failure<>(e);
         }
     }

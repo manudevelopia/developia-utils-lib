@@ -18,10 +18,16 @@ public class Lazy<R> {
     }
 
     public R get() {
-        if (!isEvaluated) return value;
+        if (isEvaluated) return value;
         var result = Try.of(function);
         isEvaluated = result.isSuccess();
         value = result.get();
+        return value;
+    }
+
+    public R getOrElse(R defaultValue) {
+        if (isEvaluated) return value;
+        value = Try.of(function).orElse(defaultValue);
         return value;
     }
 }
