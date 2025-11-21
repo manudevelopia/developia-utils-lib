@@ -4,7 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
 public class Try {
-    interface TryResult<T> {
+    public interface TryResult<T> {
+        boolean isSuccess();
+
         T get();
 
         T orElse(T defaultValue);
@@ -14,7 +16,13 @@ public class Try {
         <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
     }
 
-    record Success<T>(T value) implements TryResult<T> {
+    public record Success<T>(T value) implements TryResult<T> {
+
+        @Override
+        public boolean isSuccess() {
+            return true;
+        }
+
         @Override
         public T get() {
             return value;
@@ -35,7 +43,12 @@ public class Try {
         }
     }
 
-    record Failure<T>(Throwable throwable) implements TryResult<T> {
+    public record Failure<T>(Throwable throwable) implements TryResult<T> {
+        @Override
+        public boolean isSuccess() {
+            return false;
+        }
+
         @Override
         public T get() {
             return null;
@@ -64,7 +77,7 @@ public class Try {
         }
     }
 
-    static <T> TryResult<T> of(Supplier<T> supplier) {
+    public static <T> TryResult<T> of(Supplier<T> supplier) {
         try {
             return new Success<>(supplier.get());
         } catch (Exception e) {

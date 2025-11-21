@@ -1,9 +1,13 @@
 package info.developia.lib;
 
+import info.developia.lib.values.Try;
+
 import java.util.function.Supplier;
 
 public class Lazy<R> {
     private final Supplier<R> function;
+    private boolean isEvaluated;
+    private R value;
 
     public Lazy(Supplier<R> function) {
         this.function = function;
@@ -14,6 +18,10 @@ public class Lazy<R> {
     }
 
     public R get() {
-        return function.get();
+        if (!isEvaluated) return value;
+        var result = Try.of(function);
+        isEvaluated = result.isSuccess();
+        value = result.get();
+        return value;
     }
 }

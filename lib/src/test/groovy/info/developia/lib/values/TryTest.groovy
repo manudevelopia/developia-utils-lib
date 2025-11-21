@@ -11,6 +11,15 @@ class TryTest extends Specification {
         when:
         def result = Try.of(function)
         then:
+        'value' == result.get()
+    }
+
+    def "should return 'value'"() {
+        given:
+        def function = { return 'value' }
+        when:
+        def result = Try.of(function)
+        then:
         'value' == result.orElse('default')
     }
 
