@@ -21,10 +21,16 @@ public class BiTree<T> {
     private void compareNodes(BiTreeNode<T> nodeA, BiTreeNode<T> nodeB) {
         if (comparator.compare(nodeA.value(), nodeB.value()) > 0) {
             if (nodeA.left() != null) compareNodes(nodeA.left(), nodeB);
-            else nodeA.left(nodeB);
+            else {
+                nodeA.left(nodeB);
+                nodeB.parent(nodeA);
+            }
         } else {
             if (nodeA.right() != null) compareNodes(nodeA.right(), nodeB);
-            else nodeA.right(nodeB);
+            else {
+                nodeA.right(nodeB);
+                nodeB.parent(nodeA);
+            }
         }
     }
 
@@ -71,5 +77,25 @@ public class BiTree<T> {
         if (node.left() != null) getValuesPostOrder(node.left(), values);
         if (node.right() != null) getValuesPostOrder(node.right(), values);
         values.add(node.value());
+    }
+
+    public T popInOrder() {
+        if (root == null) return null;
+        var node = getMinimalInOrder(root);
+        return node.value();
+    }
+
+    private BiTreeNode<T> getMinimalInOrder(BiTreeNode<T> node) {
+        if (node.left() != null) return getMinimalInOrder(node.left());
+        if (node.parent() == null) {
+            var rootNode = new BiTreeNode<>(node.value());
+            root = null;
+            return rootNode;
+        }
+        if (node.right() != null) {
+            node.right().parent(node.parent());
+            node.parent().left(node.right());
+        } else node.parent().left(null);
+        return node;
     }
 }

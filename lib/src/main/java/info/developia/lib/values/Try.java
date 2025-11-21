@@ -41,6 +41,11 @@ public class Try {
         public <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
 
         }
+
+        @Override
+        public T recover(Throwable exception) {
+            return null;
+        }
     }
 
     public record Failure<T>(Throwable throwable) implements TryResult<T> {

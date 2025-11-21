@@ -1,6 +1,5 @@
 package info.developia.lib.values
 
-
 import spock.lang.Specification
 
 class TryTest extends Specification {

@@ -1,12 +1,21 @@
 package info.developia.lib.tree;
 
 public class BiTreeNode<T> {
+    private BiTreeNode<T> parent;
     private BiTreeNode<T> left;
     private BiTreeNode<T> right;
     private final T value;
 
     public BiTreeNode(T value) {
         this.value = value;
+    }
+
+    public void parent(BiTreeNode<T> parent) {
+        this.parent = parent;
+    }
+
+    public BiTreeNode<T> parent() {
+        return parent;
     }
 
     public void left(BiTreeNode<T> a) {
