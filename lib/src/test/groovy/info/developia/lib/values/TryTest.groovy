@@ -50,6 +50,16 @@ class TryTest extends Specification {
         result == 'it is done'
     }
 
+    def "should retry and finally succeed or"() {
+        given:
+        def attempt = 0
+        def function = { if (attempt++ < 2) throw new RuntimeException('what the duck!') else return 'it is done' }
+        when:
+        def result = Try.of(function).retries(3).orElseThrow(() -> new UnknownError('what happened?'))
+        then:
+        result == 'it is done'
+    }
+
     def "should throw 'UnknownError'"() {
         given:
         def function = { throw new RuntimeException('what the duck!') }

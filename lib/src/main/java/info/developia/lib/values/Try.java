@@ -11,9 +11,9 @@ public class Try {
 
         T orElse(T defaultValue);
 
-        <X extends Throwable> void orElseThrow(Class<X> exceptionClazz) throws X;
+        <X extends Throwable> T orElseThrow(Class<X> exceptionClazz) throws X;
 
-        <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+        <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
 
         TryResult<T> retries(int attempts);
     }
@@ -36,11 +36,13 @@ public class Try {
         }
 
         @Override
-        public <X extends Throwable> void orElseThrow(Class<X> exceptionClazz) {
+        public <X extends Throwable> T orElseThrow(Class<X> exceptionClazz) {
+            return value;
         }
 
         @Override
-        public <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) {
+        public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) {
+            return value;
         }
 
         @Override
@@ -67,7 +69,7 @@ public class Try {
         }
 
         @Override
-        public <X extends Throwable> void orElseThrow(Class<X> exceptionClazz) throws X {
+        public <X extends Throwable> T orElseThrow(Class<X> exceptionClazz) throws X {
             try {
                 throw exceptionClazz.getDeclaredConstructor().newInstance();
             } catch (NoSuchMethodException |
@@ -79,7 +81,7 @@ public class Try {
         }
 
         @Override
-        public <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
         }
 
