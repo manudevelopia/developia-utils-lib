@@ -17,18 +17,18 @@ class TryTest extends Specification {
         given:
         def function = { return 'value' }
         when:
-        def result = Try.of(function)
+        def result = Try.of(function).orElse('default')
         then:
-        'value' == result.orElse('default')
+        'value' == result
     }
 
     def "should return 'default'"() {
         given:
         def function = { throw new RuntimeException() }
         when:
-        def result = Try.of(function)
+        def result = Try.of(function).orElse('default')
         then:
-        'default' == result.orElse('default')
+        'default' == result
     }
 
     def "should retry"() {
@@ -71,7 +71,7 @@ class TryTest extends Specification {
 
     def "should throw 'UnknownError' with message"() {
         given:
-        def function = { throw new RuntimeException() }
+        def function = { throw new RuntimeException('what the duck!') }
         when:
         Try.of(function).orElseThrow(() -> new UnknownError('Terrible error'))
         then:
