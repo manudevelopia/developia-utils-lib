@@ -14,6 +14,8 @@ public class Try {
         <X extends Throwable> void orElseThrow(Class<X> exceptionClazz) throws X;
 
         <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
+
+        TryResult<T> retries(int attempts);
     }
 
     public record Success<T>(T value) implements TryResult<T> {
@@ -38,17 +40,17 @@ public class Try {
         }
 
         @Override
-        public <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-
+        public <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) {
         }
 
         @Override
-        public T recover(Throwable exception) {
-            return null;
+        public TryResult<T> retries(int attempts) {
+            return this;
         }
     }
 
-    public record Failure<T>(Throwable throwable) implements TryResult<T> {
+    public record Failure<T>(Throwable throwable, Supplier<T> supplier) implements TryResult<T> {
+
         @Override
         public boolean isSuccess() {
             return false;
@@ -80,13 +82,27 @@ public class Try {
         public <X extends Throwable> void orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
         }
+
+        @Override
+        public TryResult<T> retries(int attempts) {
+            Throwable exception;
+            do {
+                try {
+                    return new Success<>(supplier.get());
+                } catch (Throwable e) {
+                    exception = e;
+                }
+            }
+            while (attempts-- > 0);
+            return new Failure<>(exception, supplier);
+        }
     }
 
     public static <T> TryResult<T> of(Supplier<T> supplier) {
         try {
             return new Success<>(supplier.get());
         } catch (Throwable e) {
-            return new Failure<>(e);
+            return new Failure<>(e, supplier);
         }
     }
 }
