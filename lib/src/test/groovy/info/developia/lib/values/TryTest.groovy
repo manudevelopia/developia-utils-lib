@@ -3,24 +3,47 @@ package info.developia.lib.values
 import spock.lang.Specification
 
 class TryTest extends Specification {
+    def value = 'value'
     def whatTheDuck = 'what the duck!'
 
     def "should return 'value'"() {
         given:
-        def function = { return 'value' }
+        def function = { return value }
         when:
         def result = Try.of(function)
         then:
-        'value' == result.get()
+        value == result.get()
+    }
+
+    def "should return transformed value to 'VALUE'"() {
+        given:
+        def function = { return value }
+        when:
+        def result = Try.of(function)
+                .map(v -> v.toUpperCase())
+                .orElse('default')
+        then:
+        'VALUE'.toUpperCase() == result
+    }
+
+    def "should return transformed value to 26"() {
+        given:
+        def function = { return '26' }
+        when:
+        def result = Try.of(function)
+                .map(v -> Integer.valueOf(v))
+                .orElse(128)
+        then:
+        26 == result
     }
 
     def "should return 'value'"() {
         given:
-        def function = { return 'value' }
+        def function = { return value }
         when:
         def result = Try.of(function).orElse('default')
         then:
-        'value' == result
+        value == result
     }
 
     def "should return 'default'"() {

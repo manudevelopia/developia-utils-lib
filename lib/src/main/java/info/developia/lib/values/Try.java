@@ -2,6 +2,7 @@ package info.developia.lib.values;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Try {
@@ -9,6 +10,8 @@ public class Try {
         boolean isSuccess();
 
         T get();
+
+        <X> TryResult<X> map(Function<T, X> function);
 
         T orElse(T defaultValue);
 
@@ -33,6 +36,11 @@ public class Try {
         @Override
         public T get() {
             return value;
+        }
+
+        @Override
+        public <X> TryResult<X> map(Function<T, X> function) {
+            return of(() -> function.apply(value));
         }
 
         @Override
@@ -75,6 +83,11 @@ public class Try {
 
         @Override
         public T get() {
+            return null;
+        }
+
+        @Override
+        public <X> TryResult<X> map(Function<T, X> function) {
             return null;
         }
 
