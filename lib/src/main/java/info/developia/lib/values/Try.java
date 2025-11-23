@@ -1,6 +1,7 @@
 package info.developia.lib.values;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class Try {
@@ -18,6 +19,8 @@ public class Try {
         <X extends Throwable> T orElseThrowWithMessage(Class<X> exceptionClazz) throws X;
 
         TryResult<T> retries(int attempts);
+
+        TryResult<T> onError(Consumer<Throwable> consumer);
     }
 
     public record Success<T>(T value) implements TryResult<T> {
@@ -54,6 +57,11 @@ public class Try {
 
         @Override
         public TryResult<T> retries(int attempts) {
+            return this;
+        }
+
+        @Override
+        public TryResult<T> onError(Consumer<Throwable> consumer) {
             return this;
         }
     }
@@ -116,6 +124,12 @@ public class Try {
             }
             while (attempts-- > 0);
             return new Failure<>(exception, supplier);
+        }
+
+        @Override
+        public TryResult<T> onError(Consumer<Throwable> consumer) {
+            consumer.accept(e);
+            return this;
         }
     }
 
