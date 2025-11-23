@@ -78,4 +78,14 @@ class TryTest extends Specification {
         def exception = thrown(UnknownError)
         exception.message == 'Terrible error'
     }
+
+    def "should throw 'UnknownError' with message from exception"() {
+        given:
+        def function = { throw new RuntimeException('what the duck!') }
+        when:
+        Try.of(function).orElseThrowWithMessage(UnknownError)
+        then:
+        def exception = thrown(UnknownError)
+        exception.message == 'what the duck!'
+    }
 }

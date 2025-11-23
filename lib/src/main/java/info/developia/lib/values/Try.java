@@ -15,6 +15,8 @@ public class Try {
 
         <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X;
 
+        <X extends Throwable> T orElseThrowWithMessage(Class<X> exceptionClazz) throws X;
+
         TryResult<T> retries(int attempts);
     }
 
@@ -46,12 +48,17 @@ public class Try {
         }
 
         @Override
+        public <X extends Throwable> T orElseThrowWithMessage(Class<X> exceptionClazz) {
+            return value;
+        }
+
+        @Override
         public TryResult<T> retries(int attempts) {
             return this;
         }
     }
 
-    public record Failure<T>(Throwable throwable, Supplier<T> supplier) implements TryResult<T> {
+    public record Failure<T>(Throwable e, Supplier<T> supplier) implements TryResult<T> {
 
         @Override
         public boolean isSuccess() {
@@ -83,6 +90,18 @@ public class Try {
         @Override
         public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
             throw exceptionSupplier.get();
+        }
+
+        @Override
+        public <X extends Throwable> T orElseThrowWithMessage(Class<X> exceptionClazz) throws X {
+            try {
+                throw exceptionClazz.getDeclaredConstructor(String.class).newInstance(e.getMessage());
+            } catch (NoSuchMethodException |
+                     InstantiationException |
+                     IllegalAccessException |
+                     InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
