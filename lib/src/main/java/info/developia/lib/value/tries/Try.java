@@ -11,4 +11,8 @@ public class Try {
             return new TryFailure<>(e, supplier);
         }
     }
+
+    public static <T> TryLazy<T> lazyOf(Supplier<T> supplier) {
+        return new TryLazy<>(supplier);
+    }
 }
