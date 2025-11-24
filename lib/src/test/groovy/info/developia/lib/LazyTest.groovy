@@ -1,5 +1,6 @@
 package info.developia.lib
 
+import info.developia.lib.value.Lazy
 import spock.lang.Specification
 
 class LazyTest extends Specification {

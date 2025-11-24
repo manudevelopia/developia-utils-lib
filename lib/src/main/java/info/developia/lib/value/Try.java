@@ -1,4 +1,4 @@
-package info.developia.lib.values;
+package info.developia.lib.value;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;

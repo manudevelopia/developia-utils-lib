@@ -1,4 +1,5 @@
-package info.developia.lib.values
+package info.developia.lib.value.tuple
+
 
 import spock.lang.Specification
 

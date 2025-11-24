@@ -1,6 +1,4 @@
-package info.developia.lib;
-
-import info.developia.lib.values.Try;
+package info.developia.lib.value;
 
 import java.util.function.Supplier;
 

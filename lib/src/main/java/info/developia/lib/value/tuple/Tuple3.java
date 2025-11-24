@@ -1,4 +1,4 @@
-package info.developia.lib.values;
+package info.developia.lib.value.tuple;
 
 public record Tuple3<O, T, H>(
         O one,
