@@ -1,5 +1,7 @@
 package info.developia.lib.value;
 
+import info.developia.lib.value.tries.Try;
+
 import java.util.function.Supplier;
 
 public class Lazy<R> {

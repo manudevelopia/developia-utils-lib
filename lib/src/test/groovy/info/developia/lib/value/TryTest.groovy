@@ -1,5 +1,6 @@
 package info.developia.lib.value
 
+import info.developia.lib.value.tries.Try
 import spock.lang.Specification
 
 class TryTest extends Specification {
