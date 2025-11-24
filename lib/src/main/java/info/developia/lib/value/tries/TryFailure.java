@@ -13,6 +13,11 @@ public record TryFailure<T>(Throwable e, Supplier<T> supplier) implements TryRes
     }
 
     @Override
+    public boolean isFailure() {
+        return !isSuccess();
+    }
+
+    @Override
     public T get() {
         return null;
     }

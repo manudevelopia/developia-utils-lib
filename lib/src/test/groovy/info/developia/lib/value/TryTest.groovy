@@ -13,6 +13,7 @@ class TryTest extends Specification {
         when:
         def result = Try.of(function)
         then:
+        result.isSuccess()
         value == result.get()
     }
 
@@ -51,9 +52,10 @@ class TryTest extends Specification {
         given:
         def function = { throw new RuntimeException() }
         when:
-        def result = Try.of(function).orElse('default')
+        def result = Try.of(function)
         then:
-        'default' == result
+        result.isFailure()
+        'default' == result.orElse('default')
     }
 
     def "should retry"() {

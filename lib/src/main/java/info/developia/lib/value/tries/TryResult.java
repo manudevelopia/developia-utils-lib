@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 public interface TryResult<T> {
     boolean isSuccess();
 
+    boolean isFailure();
+
     T get();
 
     <X> TryResult<X> map(Function<T, X> function);

@@ -13,6 +13,12 @@ public record TrySuccess<T>(T value) implements TryResult<T> {
         return true;
     }
 
+
+    @Override
+    public boolean isFailure() {
+        return !isSuccess();
+    }
+
     @Override
     public T get() {
         return value;
