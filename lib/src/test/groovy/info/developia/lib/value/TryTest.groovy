@@ -151,4 +151,15 @@ class TryTest extends Specification {
         then:
         'default' == result.get()
     }
+
+    def "should return transformed value to 'VALUE' in lazy way"() {
+        given:
+        def function = { return value }
+        when:
+        def result = Try.lazyOf(function)
+                .map(v -> v.toUpperCase())
+                .orElse('default')
+        then:
+        'VALUE'.toUpperCase() == result.get()
+    }
 }
