@@ -3,7 +3,7 @@ package info.developia.lib.value
 import info.developia.lib.value.tries.Try
 import spock.lang.Specification
 
-class TryTest extends Specification {
+class TryLazyTest extends Specification {
     def value = 'value'
     def whatTheDuck = 'what the duck!'
 
@@ -11,9 +11,8 @@ class TryTest extends Specification {
         given:
         def function = { return value }
         when:
-        def result = Try.of(function)
+        def result = Try.lazyOf(function)
         then:
-        result.isSuccess()
         value == result.get()
     }
 
@@ -21,50 +20,49 @@ class TryTest extends Specification {
         given:
         def function = { return value }
         when:
-        def result = Try.of(function)
+        def result = Try.lazyOf(function)
                 .map(v -> v.toUpperCase())
                 .orElse('default')
         then:
-        'VALUE'.toUpperCase() == result
+        'VALUE'.toUpperCase() == result.get()
     }
 
     def "should return transformed value to 26"() {
         given:
         def function = { return '26' }
         when:
-        def result = Try.of(function)
+        def result = Try.lazyOf(function)
                 .map(v -> Integer.valueOf(v))
                 .orElse(128)
         then:
-        26 == result
+        26 == result.get()
     }
 
     def "should return 'value'"() {
         given:
         def function = { return value }
         when:
-        def result = Try.of(function).orElse('default')
+        def result = Try.lazyOf(function).orElse('default')
         then:
-        value == result
+        value == result.get()
     }
 
     def "should return 'default'"() {
         given:
         def function = { throw new RuntimeException() }
         when:
-        def result = Try.of(function)
+        def result = Try.lazyOf(function).orElse('default')
         then:
-        result.isFailure()
-        'default' == result.orElse('default')
+        'default' == result.get()
     }
 
     def "should retry"() {
         given:
         def function = { throw new RuntimeException(whatTheDuck) }
         when:
-        def result = Try.of(function).retries(3).orElse('no luck!')
+        def result = Try.lazyOf(function).retries(3).orElse('no luck!')
         then:
-        result == 'no luck!'
+        'no luck!' == result.get()
     }
 
     def "should retry and finally succeed"() {
@@ -72,9 +70,9 @@ class TryTest extends Specification {
         def attempt = 0
         def function = { if (attempt++ < 2) throw new RuntimeException(whatTheDuck) else return 'it is done' }
         when:
-        def result = Try.of(function).retries(3).orElse('it is done')
+        def result = Try.lazyOf(function).retries(3).orElse('it is done')
         then:
-        result == 'it is done'
+        'it is done' == result.get()
     }
 
     def "should retry and finally succeed or"() {
@@ -82,17 +80,18 @@ class TryTest extends Specification {
         def attempt = 0
         def function = { if (attempt++ < 2) throw new RuntimeException(whatTheDuck) else return 'it is done' }
         when:
-        def result = Try.of(function).retries(3).orElseThrow(() -> new UnknownError('what happened?'))
+        def result = Try.lazyOf(function).retries(3).orElseThrow(() -> new UnknownError('what happened?'))
         then:
-        result == 'it is done'
+        'it is done' == result.get()
     }
 
     def "should throw 'UnknownError'"() {
         given:
         def function = { throw new RuntimeException(whatTheDuck) }
         when:
-        Try.of(function).orElseThrow(UnknownError)
+        def result = Try.lazyOf(function).orElseThrow(UnknownError)
         then:
+        result.get()
         thrown(UnknownError)
     }
 
@@ -100,8 +99,9 @@ class TryTest extends Specification {
         given:
         def function = { throw new RuntimeException(whatTheDuck) }
         when:
-        Try.of(function).orElseThrow(() -> new UnknownError('Terrible error'))
+        def result = Try.lazyOf(function).orElseThrow(() -> new UnknownError('Terrible error'))
         then:
+        result.get()
         def exception = thrown(UnknownError)
         exception.message == 'Terrible error'
     }
@@ -110,8 +110,9 @@ class TryTest extends Specification {
         given:
         def function = { throw new RuntimeException(whatTheDuck) }
         when:
-        Try.of(function).orElseThrowWithMessage(UnknownError)
+        def result = Try.lazyOf(function).orElseThrowWithMessage(UnknownError)
         then:
+        result.get()
         def exception = thrown(UnknownError)
         exception.message == whatTheDuck
     }
@@ -123,43 +124,15 @@ class TryTest extends Specification {
         def original = System.out
         System.setOut(new PrintStream(out))
         when:
-        Try.of(function)
+        def result = Try.lazyOf(function)
                 .onError((error) -> System.out.println(error.getMessage()))
                 .orElseThrowWithMessage(UnknownError)
         then:
+        result.get()
         def exception = thrown(UnknownError)
         exception.message == whatTheDuck
         out.toString().trim() == whatTheDuck
         cleanup:
         System.setOut(original)
     }
-
-//    def "should return 'value' in lazy way"() {
-//        given:
-//        def function = { return value }
-//        when:
-//        def result = Try.lazyOf(function)
-//        then:
-//        value == result.get()
-//    }
-//
-//    def "should return 'default' in lazy way"() {
-//        given:
-//        def function = { throw new RuntimeException() }
-//        when:
-//        def result = Try.lazyOf(function).orElse('default')
-//        then:
-//        'default' == result.get()
-//    }
-//
-//    def "should return transformed value to 'VALUE' in lazy way"() {
-//        given:
-//        def function = { return value }
-//        when:
-//        def result = Try.lazyOf(function)
-//                .map(v -> v.toUpperCase())
-//                .orElse('default')
-//        then:
-//        'VALUE'.toUpperCase() == result.get()
-//    }
 }
