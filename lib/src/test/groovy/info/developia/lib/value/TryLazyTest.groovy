@@ -85,24 +85,13 @@ class TryLazyTest extends Specification {
         'it is done' == result.get()
     }
 
-    def "should throw 'UnknownError'"() {
-        given:
-        def function = { throw new RuntimeException(whatTheDuck) }
-        when:
-        def result = Try.lazyOf(function).orElseThrow(UnknownError)
-        then:
-        result.get()
-        thrown(UnknownError)
-    }
-
     def "should throw 'UnknownError' with message"() {
         given:
         def function = { throw new RuntimeException(whatTheDuck) }
         when:
-        def result = Try.lazyOf(function).orElseThrow(() -> new UnknownError('Terrible error'))
+        Try.lazyOf(function).orElseThrow(() -> new RuntimeException('Terrible error')).get()
         then:
-        result.get()
-        def exception = thrown(UnknownError)
+        def exception = thrown(RuntimeException)
         exception.message == 'Terrible error'
     }
 
@@ -110,9 +99,8 @@ class TryLazyTest extends Specification {
         given:
         def function = { throw new RuntimeException(whatTheDuck) }
         when:
-        def result = Try.lazyOf(function).orElseThrowWithMessage(UnknownError)
+        Try.lazyOf(function).orElseThrowWithMessage(UnknownError).get()
         then:
-        result.get()
         def exception = thrown(UnknownError)
         exception.message == whatTheDuck
     }
@@ -124,11 +112,11 @@ class TryLazyTest extends Specification {
         def original = System.out
         System.setOut(new PrintStream(out))
         when:
-        def result = Try.lazyOf(function)
+        Try.lazyOf(function)
                 .onError((error) -> System.out.println(error.getMessage()))
                 .orElseThrowWithMessage(UnknownError)
+                .get()
         then:
-        result.get()
         def exception = thrown(UnknownError)
         exception.message == whatTheDuck
         out.toString().trim() == whatTheDuck
