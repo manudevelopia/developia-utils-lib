@@ -9,7 +9,7 @@ public class TryLazy<T> {
     private T defaultValue;
     private int attempts;
     private Supplier<? extends RuntimeException> orExceptionSupplier;
-    private Consumer<Throwable> errorConsumer;
+    private Consumer<RuntimeException> errorConsumer;
 
     public TryLazy(Supplier<T> supplier) {
         this.supplier = supplier;
@@ -19,7 +19,7 @@ public class TryLazy<T> {
         do {
             try {
                 return supplier.get();
-            } catch (Throwable e) {
+            } catch (RuntimeException e) {
                 if (errorConsumer != null) errorConsumer.accept(e);
             }
         }
@@ -47,8 +47,8 @@ public class TryLazy<T> {
         return this;
     }
 
-    public TryLazy<T> onError(Consumer<Throwable> errorConsumer) {
+    public TryLazy<T> onError(Consumer<RuntimeException> errorConsumer) {
         this.errorConsumer = errorConsumer;
-        return null;
+        return this;
     }
 }
