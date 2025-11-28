@@ -1,6 +1,6 @@
-package info.developia.lib.value
+package info.developia.lib.value.tries
 
-import info.developia.lib.value.tries.Try
+
 import spock.lang.Specification
 
 class TryLazyTest extends Specification {
