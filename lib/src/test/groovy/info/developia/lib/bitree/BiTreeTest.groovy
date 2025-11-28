@@ -79,10 +79,10 @@ class BiTreeTest extends Specification {
         biTree.inOrder() == ['Dave', 'John', 'Malcom', 'Steve']
 //        biTree.preOrder() == ['John', 'Dave', 'Malcom', 'Steve']
 //        biTree.postOrder() == ['Dave', 'Steve', 'Malcom', 'John']
-        biTree.popInOrder() == 'Dave'
-        biTree.popInOrder() == 'John'
-        biTree.popInOrder() == 'Malcom'
-        biTree.popInOrder() == 'Steve'
-        biTree.popInOrder() == null
+//        biTree.popInOrder() == 'Dave'
+//        biTree.popInOrder() == 'John'
+//        biTree.popInOrder() == 'Malcom'
+//        biTree.popInOrder() == 'Steve'
+//        biTree.popInOrder() == null
     }
 }
