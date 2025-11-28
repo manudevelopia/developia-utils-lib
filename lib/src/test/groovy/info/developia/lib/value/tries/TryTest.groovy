@@ -133,33 +133,4 @@ class TryTest extends Specification {
         cleanup:
         System.setOut(original)
     }
-
-//    def "should return 'value' in lazy way"() {
-//        given:
-//        def function = { return value }
-//        when:
-//        def result = Try.lazyOf(function)
-//        then:
-//        value == result.get()
-//    }
-//
-//    def "should return 'default' in lazy way"() {
-//        given:
-//        def function = { throw new RuntimeException() }
-//        when:
-//        def result = Try.lazyOf(function).orElse('default')
-//        then:
-//        'default' == result.get()
-//    }
-//
-//    def "should return transformed value to 'VALUE' in lazy way"() {
-//        given:
-//        def function = { return value }
-//        when:
-//        def result = Try.lazyOf(function)
-//                .map(v -> v.toUpperCase())
-//                .orElse('default')
-//        then:
-//        'VALUE'.toUpperCase() == result.get()
-//    }
 }
