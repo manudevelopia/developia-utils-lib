@@ -39,6 +39,17 @@ class TryTest extends Specification {
         26 == result
     }
 
+    def "should fail transforming value and return 128"() {
+        given:
+        def function = { return 'twenty six' }
+        when:
+        def result = Try.of(function)
+                .map(v -> Integer.valueOf(v))
+                .orElse(128)
+        then:
+        128 == result
+    }
+
     def "should return 'value'"() {
         given:
         def function = { return value }
