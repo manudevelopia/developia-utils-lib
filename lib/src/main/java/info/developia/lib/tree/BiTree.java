@@ -34,15 +34,6 @@ public class BiTree<T> {
         }
     }
 
-    public T pop() {
-        return getMinimal(root).value();
-    }
-
-    private BiTreeNode<T> getMinimal(BiTreeNode<T> node) {
-        if (node.left() == null) return node;
-        return getMinimal(node.left());
-    }
-
     public List<T> inOrder() {
         var values = new ArrayList<T>();
         getValuesInOrder(root, values);
