@@ -1,6 +1,6 @@
-package info.developia.lib
+package info.developia.lib.value
 
-import info.developia.lib.value.Lazy
+
 import spock.lang.Specification
 
 class LazyTest extends Specification {
